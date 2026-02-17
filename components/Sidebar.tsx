@@ -1,30 +1,39 @@
 
 import React from 'react';
-import { MODULES, RESOURCES } from '../data/courseContent';
+import { MODULES } from '../data/courseContent';
 
 interface SidebarProps {
   activeLessonId: string;
   onSelectLesson: (id: string) => void;
+  onOpenMap: () => void;
   activeTab: 'outline' | 'resources';
   setActiveTab: (tab: 'outline' | 'resources') => void;
+  view: 'lesson' | 'map';
   onClose?: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeLessonId, onSelectLesson, activeTab, setActiveTab, onClose }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ 
+    activeLessonId, 
+    onSelectLesson, 
+    onOpenMap, 
+    activeTab, 
+    setActiveTab, 
+    view,
+    onClose 
+}) => {
   const allLessons = MODULES.flatMap(m => m.lessons);
   const activeIndex = allLessons.findIndex(l => l.id === activeLessonId);
   const progress = Math.round(((activeIndex + 1) / allLessons.length) * 100);
 
   return (
     <aside className="w-full h-full flex flex-col bg-white overflow-hidden">
-      {/* Header del Sidebar con botón de cierre interno: Flecha a la izquierda */}
+      {/* Header del Sidebar */}
       <div className="p-5 flex items-center justify-between border-b bg-gray-50/50">
         <div className="flex items-center gap-2">
           <i className="fas fa-bible text-[#8B4513]"></i>
           <span className="font-bold text-[#8B4513] text-lg tracking-tight">PENTATEUCO</span>
         </div>
         
-        {/* Flecha de cierre situada a la derecha del título */}
         <button 
           onClick={onClose}
           className="p-2 w-10 h-10 rounded-xl bg-white text-gray-400 hover:text-[#8B4513] hover:bg-[#8B4513]/10 transition-all flex items-center justify-center shadow-sm border border-gray-100"
@@ -45,16 +54,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeLessonId, onSelectLesson
           onClick={() => setActiveTab('resources')}
           className={`flex-1 py-4 text-center font-semibold text-sm transition-all duration-300 ${activeTab === 'resources' ? 'border-b-4 border-[#8B4513] text-[#8B4513]' : 'text-gray-400 hover:text-gray-600'}`}
         >
-          <i className="fas fa-file-alt mr-2"></i> Recursos
+          <i className="fas fa-map mr-2"></i> Recursos
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto sidebar-scroll p-4 space-y-6">
+      <div className="flex-1 overflow-y-auto sidebar-scroll bg-gray-50/30">
         {activeTab === 'outline' ? (
-          <>
+          <div className="p-4 space-y-6">
             <div className="bg-[#8B4513]/5 p-5 rounded-2xl border border-[#8B4513]/10">
               <div className="flex justify-between items-center text-xs font-bold text-[#8B4513] mb-3">
-                <span className="uppercase">Tu Avance</span>
+                <span className="uppercase tracking-widest">Tu Avance</span>
                 <span>{progress}%</span>
               </div>
               <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -76,18 +85,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeLessonId, onSelectLesson
                       key={lesson.id}
                       onClick={() => onSelectLesson(lesson.id)}
                       className={`w-full text-left p-4 rounded-2xl transition-all duration-300 group flex items-center gap-4 border ${
-                        activeLessonId === lesson.id 
+                        activeLessonId === lesson.id && view === 'lesson'
                           ? 'bg-white border-[#8B4513] shadow-md shadow-[#8B4513]/5 translate-x-1' 
                           : 'bg-white border-transparent hover:bg-gray-50'
                       }`}
                     >
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${
-                        activeLessonId === lesson.id ? 'bg-[#8B4513] text-white' : 'bg-[#CD853F]/10 text-[#CD853F]'
+                        activeLessonId === lesson.id && view === 'lesson' ? 'bg-[#8B4513] text-white' : 'bg-[#CD853F]/10 text-[#CD853F]'
                       }`}>
                         <i className={`fas ${lesson.icon} text-sm`}></i>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className={`text-sm font-semibold truncate transition-colors ${activeLessonId === lesson.id ? 'text-[#8B4513]' : 'text-gray-700'}`}>
+                        <h4 className={`text-sm font-semibold truncate transition-colors ${activeLessonId === lesson.id && view === 'lesson' ? 'text-[#8B4513]' : 'text-gray-700'}`}>
                           {lesson.title}
                         </h4>
                         <div className="text-[10px] text-gray-400 mt-1 flex items-center gap-1">
@@ -99,35 +108,42 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeLessonId, onSelectLesson
                 </div>
               </div>
             ))}
-          </>
+          </div>
         ) : (
-          <div className="space-y-4">
-            <h3 className="text-sm font-bold text-gray-800 px-2 uppercase tracking-widest">Descargas y Enlaces</h3>
-            {RESOURCES.map((resource, idx) => (
-              <a 
-                key={idx} 
-                href={resource.link} 
-                target="_blank" 
-                rel="noreferrer"
-                className="block p-4 bg-white rounded-2xl border border-gray-100 hover:border-[#CD853F] hover:shadow-lg transition-all group"
-              >
-                <div className="flex gap-4 items-center">
-                  <div className="w-12 h-12 bg-[#CD853F]/10 rounded-xl flex items-center justify-center text-[#CD853F] group-hover:bg-[#CD853F] group-hover:text-white transition-colors">
-                    <i className={`fas ${resource.icon} text-xl`}></i>
-                  </div>
-                  <div className="min-w-0">
-                    <h4 className="font-bold text-gray-800 leading-tight text-sm truncate">{resource.title}</h4>
-                    <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-tighter">{resource.type} • {resource.meta}</p>
-                  </div>
+          <div className="p-6 space-y-4">
+            <h4 className="font-bold text-[#8B4513] text-sm uppercase tracking-widest mb-2 flex items-center gap-2">
+                <i className="fas fa-map-marked-alt"></i> Material de Repaso
+            </h4>
+            <button 
+              onClick={onOpenMap}
+              className={`w-full p-6 rounded-[2rem] border-2 transition-all group relative overflow-hidden flex flex-col items-center text-center gap-4 ${
+                view === 'map' 
+                ? 'bg-[#8B4513] border-[#8B4513] text-white shadow-xl' 
+                : 'bg-white border-[#CD853F]/20 text-gray-700 hover:border-[#8B4513]/40'
+              }`}
+            >
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl mb-2 transition-all group-hover:scale-110 ${view === 'map' ? 'bg-white/20' : 'bg-[#CD853F]/10 text-[#8B4513]'}`}>
+                    <i className="fas fa-map-location-dot"></i>
                 </div>
-              </a>
-            ))}
+                <div>
+                    <span className="block font-black text-lg">Mapa del Recorrido</span>
+                    <span className={`text-[10px] uppercase tracking-widest font-bold opacity-60 ${view === 'map' ? 'text-white' : 'text-[#CD853F]'}`}>
+                        Actividad Interactiva
+                    </span>
+                </div>
+                <div className={`mt-4 px-4 py-2 rounded-full text-[10px] font-bold uppercase transition-all ${view === 'map' ? 'bg-white text-[#8B4513]' : 'bg-[#8B4513] text-white group-hover:px-6'}`}>
+                    {view === 'map' ? 'Mapa Abierto' : 'Explorar Mapa'}
+                </div>
+            </button>
+            <p className="text-xs text-gray-400 text-center italic px-4">
+                "Usa el mapa interactivo para visualizar los momentos críticos del Éxodo y Números."
+            </p>
           </div>
         )}
       </div>
       
       <div className="p-4 bg-gray-50 border-t text-center">
-        <p className="text-[10px] text-gray-400 font-medium">LTS -Pentateuco</p>
+        <p className="text-[10px] text-gray-400 font-medium">LTS - Pentateuco</p>
       </div>
     </aside>
   );

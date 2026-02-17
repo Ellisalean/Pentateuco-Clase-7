@@ -2,11 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { BlockRenderer } from './components/InteractiveBlocks';
+import { JourneyMap } from './components/JourneyMap';
 import { MODULES } from './data/courseContent';
 import { Lesson } from './types';
 
 const App: React.FC = () => {
   const [activeLessonId, setActiveLessonId] = useState('lesson9'); 
+  const [view, setView] = useState<'lesson' | 'map'>('lesson');
   const [activeTab, setActiveTab] = useState<'outline' | 'resources'>('outline');
   const [lesson, setLesson] = useState<Lesson | null>(null);
   
@@ -27,14 +29,24 @@ const App: React.FC = () => {
   const isLastLesson = currentIdx === allLessons.length - 1;
 
   const handleNext = () => {
+    if (view === 'map') {
+        setView('lesson');
+        setActiveLessonId(allLessons[0].id);
+        return;
+    }
     if (isLastLesson) {
-      setActiveLessonId(allLessons[0].id);
+      setView('map');
     } else {
       setActiveLessonId(allLessons[currentIdx + 1].id);
     }
   };
 
   const handlePrev = () => {
+    if (view === 'map') {
+        setView('lesson');
+        setActiveLessonId(allLessons[allLessons.length - 1].id);
+        return;
+    }
     if (currentIdx > 0) setActiveLessonId(allLessons[currentIdx - 1].id);
   };
 
@@ -60,10 +72,16 @@ const App: React.FC = () => {
             activeLessonId={activeLessonId} 
             onSelectLesson={(id) => {
               setActiveLessonId(id);
+              setView('lesson');
               if (window.innerWidth < 1024) setIsSidebarOpen(false);
             }} 
+            onOpenMap={() => {
+                setView('map');
+                if (window.innerWidth < 1024) setIsSidebarOpen(false);
+            }}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
+            view={view}
             onClose={() => setIsSidebarOpen(false)}
           />
         </div>
@@ -81,10 +99,11 @@ const App: React.FC = () => {
 
       <main className="flex-1 overflow-y-auto relative scroll-smooth bg-[#f8faff]">
         
+        {/* Banner dinámico */}
         <div className="relative h-[400px] md:h-[450px] w-full flex items-end">
           <div 
             className="absolute inset-0 bg-cover bg-center transition-all duration-1000"
-            style={{ backgroundImage: `url('${lesson.bannerImage}')` }}
+            style={{ backgroundImage: `url('${view === 'lesson' ? lesson.bannerImage : 'https://images.unsplash.com/photo-1548345680-f5475ee5df82?auto=format&fit=crop&w=1600&q=80'}')` }}
           >
             <div className="absolute inset-0 bg-gradient-to-t from-[#8B4513] via-[#8B4513]/40 to-transparent"></div>
           </div>
@@ -95,42 +114,54 @@ const App: React.FC = () => {
                 <i className="fas fa-chevron-right text-[8px] md:text-[10px] hidden sm:inline opacity-50"></i>
                 <span>Pentateuco</span>
                 <i className="fas fa-chevron-right text-[8px] md:text-[10px] opacity-50"></i>
-                <span>Números - Clase 7</span>
+                <span>{view === 'lesson' ? 'Números - Clase 7' : 'Recurso Especial'}</span>
               </div>
               <h1 className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-2xl leading-[1.1]">
-                {lesson.title}
+                {view === 'lesson' ? lesson.title : 'Mapa Interactivo del Recorrido'}
               </h1>
               <p className="text-lg md:text-2xl opacity-90 font-light max-w-2xl drop-shadow-lg italic">
-                {lesson.subtitle}
+                {view === 'lesson' ? lesson.subtitle : 'Sigue los pasos de Israel desde la esclavitud hasta la libertad'}
               </p>
             </div>
           </div>
         </div>
 
         <div className="max-w-5xl mx-auto px-4 sm:px-8 py-10 md:py-16 -mt-10 relative z-20">
-          <div className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden p-6 sm:p-10 md:p-16 border border-gray-100">
-            {lesson.blocks.map((block, idx) => (
-              <BlockRenderer key={idx} block={block} />
-            ))}
+          <div className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden min-h-[600px] border border-gray-100">
+            {view === 'lesson' ? (
+              <div className="p-6 sm:p-10 md:p-16">
+                {lesson.blocks.map((block, idx) => (
+                  <BlockRenderer key={idx} block={block} />
+                ))}
+              </div>
+            ) : (
+              <div className="h-full flex flex-col">
+                <JourneyMap />
+              </div>
+            )}
 
-            <div className="mt-16 pt-10 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-6">
+            {/* Navegación de pie de página */}
+            <div className="px-6 sm:px-10 md:px-16 pb-16 pt-10 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-6 bg-gray-50/30">
               <button 
                 onClick={handlePrev}
-                disabled={currentIdx === 0}
+                disabled={currentIdx === 0 && view === 'lesson'}
                 className={`w-full sm:w-auto font-bold transition-all flex items-center justify-center gap-3 px-8 py-4 rounded-2xl border-2 ${
-                  currentIdx === 0 
+                  currentIdx === 0 && view === 'lesson'
                     ? 'text-gray-300 border-gray-100 cursor-not-allowed' 
                     : 'text-[#8B4513] border-[#8B4513]/20 hover:bg-[#8B4513]/5 active:scale-95'
                 }`}
               >
                  <i className="fas fa-arrow-left"></i> Anterior
               </button>
+              
               <button 
                 onClick={handleNext}
                 className={`w-full sm:w-auto bg-gradient-to-r from-[#CD853F] to-[#8B4513] text-white px-10 py-4 rounded-full font-bold shadow-xl hover:scale-105 hover:shadow-[#8B4513]/20 transition-all flex items-center justify-center gap-3 active:scale-95`}
               >
-                {isLastLesson ? (
+                {view === 'map' ? (
                   <>Reiniciar Curso <i className="fas fa-undo-alt"></i></>
+                ) : isLastLesson ? (
+                  <>Ver Mapa del Recorrido <i className="fas fa-map-marked-alt"></i></>
                 ) : (
                   <>Siguiente Lección <i className="fas fa-arrow-right"></i></>
                 )}

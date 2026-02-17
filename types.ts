@@ -73,3 +73,13 @@ export interface Resource {
   link: string;
   icon: string;
 }
+
+export interface JourneyPoint {
+  id: number;
+  name: string;
+  x: number; // Porcentaje de izquierda
+  y: number; // Porcentaje de arriba
+  title: string;
+  description: string;
+  biblicalRef: string;
+}

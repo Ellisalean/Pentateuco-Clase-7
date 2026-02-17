@@ -1,36 +1,106 @@
 
-import { Module, Resource } from '../types';
+import { Module, Resource, JourneyPoint } from '../types';
 
-export const RESOURCES: Resource[] = [
+export const JOURNEY_POINTS: JourneyPoint[] = [
   {
-    title: "Guía de las 5 Ofrendas",
-    type: "PDF",
-    meta: "Resumen Visual",
-    link: "#",
-    icon: "fa-file-pdf"
+    id: 1,
+    name: "Ramsés",
+    x: 11, y: 65,
+    title: "La Partida (Egipto)",
+    description: "Israel sale de Ramsés, en el Delta del Nilo, después de la décima plaga. Es el inicio de la redención física.",
+    biblicalRef: "Éxodo 12:37"
   },
   {
-    title: "Mapa del Tabernáculo",
-    type: "Imagen",
-    meta: "Ubicación Altar",
-    link: "#",
-    icon: "fa-map"
+    id: 2,
+    name: "Mar Rojo",
+    x: 12, y: 68,
+    title: "El Paso del Mar",
+    description: "Dios abre las aguas en la región de Suez. El evento fundacional donde el ejército egipcio es derrotado.",
+    biblicalRef: "Éxodo 14"
   },
   {
-    title: "Tabla Comparativa Pentateuco",
-    type: "Documento",
-    meta: "Repaso General",
-    link: "#",
-    icon: "fa-table"
+    id: 3,
+    name: "Mara y Elim",
+    x: 36, y: 58,
+    title: "Aguas Amargas y Oasis",
+    description: "Costa este del Golfo de Suez. Dios sana las aguas en Mara y provee descanso en el oasis de Elim.",
+    biblicalRef: "Éxodo 15:22-27"
   },
   {
-    title: "Cronología de Números",
-    type: "PDF",
-    meta: "Marco Histórico",
-    link: "#",
-    icon: "fa-clock"
+    id: 4,
+    name: "Desierto de Sin",
+    x: 44, y: 70,
+    title: "El Maná del Cielo",
+    description: "Situado entre Elim y el Sinaí. Dios provee el Maná por primera vez ante la queja del pueblo.",
+    biblicalRef: "Éxodo 16"
+  },
+  {
+    id: 5,
+    name: "Refidim",
+    x: 52, y: 80,
+    title: "Agua de la Roca",
+    description: "Cerca del macizo montañoso. Moisés golpea la roca y Josué derrota a Amalec mientras Moisés ora.",
+    biblicalRef: "Éxodo 17"
+  },
+  {
+    id: 6,
+    name: "Monte Sinaí",
+    x: 58, y: 88,
+    title: "La Entrega de la Ley",
+    description: "En el corazón de la península. Dios desciende con fuego y entrega el Decálogo y el diseño del Tabernáculo.",
+    biblicalRef: "Éxodo 19-20"
+  },
+  {
+    id: 7,
+    name: "Taberá",
+    x: 64, y: 65,
+    title: "Fuego de YHWH",
+    description: "Ruta norte hacia Parán. El juicio de Dios cae sobre los quejosos en los bordes del campamento.",
+    biblicalRef: "Números 11"
+  },
+  {
+    id: 8,
+    name: "Cades-barnea",
+    x: 70, y: 45,
+    title: "El Informe de los Espías",
+    description: "Oasis estratégico al sur de Canaán. La incredulidad causa el castigo de 40 años en el desierto.",
+    biblicalRef: "Números 13-14"
+  },
+  {
+    id: 9,
+    name: "Ezion-geber",
+    x: 78, y: 62,
+    title: "Peregrinaje del Desierto",
+    description: "Puerto en el Golfo de Aqaba. Israel rodea la tierra de Edom durante décadas de disciplina.",
+    biblicalRef: "Números 33:35"
+  },
+  {
+    id: 10,
+    name: "Monte Hor",
+    x: 82, y: 48,
+    title: "Muerte de Aarón",
+    description: "En la frontera de Edom. Aarón el Sumo Sacerdote muere y entrega el cargo a su hijo Eleazar.",
+    biblicalRef: "Números 20:22-29"
+  },
+  {
+    id: 11,
+    name: "Ar de Moab",
+    x: 88, y: 32,
+    title: "Serpiente de Bronce",
+    description: "Subida por el este del Mar Muerto. Dios provee sanidad a través de la fe al mirar el bronce.",
+    biblicalRef: "Números 21:4-9"
+  },
+  {
+    id: 12,
+    name: "Llanuras de Moab",
+    x: 92, y: 22,
+    title: "El Umbral del Jordán",
+    description: "Frente a Jericó. Punto final del Pentateuco. Balaam bendice y Moisés da sus últimos discursos.",
+    biblicalRef: "Números 22-36"
   }
 ];
+
+export const RESOURCES: Resource[] = [];
 
 export const MODULES: Module[] = [
   {
