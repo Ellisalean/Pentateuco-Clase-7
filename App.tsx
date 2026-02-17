@@ -14,6 +14,9 @@ const App: React.FC = () => {
   
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
 
+  // IMAGEN DEL ENCABEZADO PARA EL MAPA (Cambia esta URL para cambiar la imagen superior del mapa)
+  const MAP_HEADER_IMAGE = "https://cdn.myportfolio.com/d435fa58-d32c-4141-8a15-0f2bfccdea41/2942c565-be22-49e3-8b27-5bded2abf106_rw_1920.jpg?h=42b7640f2fd65b8e6a26fc23ea1fd109";
+
   useEffect(() => {
     const allLessons = MODULES.flatMap(m => m.lessons);
     const found = allLessons.find(l => l.id === activeLessonId);
@@ -99,13 +102,13 @@ const App: React.FC = () => {
 
       <main className="flex-1 overflow-y-auto relative scroll-smooth bg-[#f8faff]">
         
-        {/* Banner dinámico */}
+        {/* Banner dinámico: Aquí es donde se coloca la imagen del encabezado */}
         <div className="relative h-[400px] md:h-[450px] w-full flex items-end">
           <div 
             className="absolute inset-0 bg-cover bg-center transition-all duration-1000"
-            style={{ backgroundImage: `url('${view === 'lesson' ? lesson.bannerImage : 'https://images.unsplash.com/photo-1548345680-f5475ee5df82?auto=format&fit=crop&w=1600&q=80'}')` }}
+            style={{ backgroundImage: `url('${view === 'lesson' ? lesson.bannerImage : MAP_HEADER_IMAGE}')` }}
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-[#8B4513] via-[#8B4513]/40 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0c0a09] via-[#0c0a09]/40 to-transparent"></div>
           </div>
           <div className="relative z-10 px-6 md:px-12 pb-12 text-white max-w-5xl">
             <div className={`transition-all duration-500 ${!isSidebarOpen && window.innerWidth >= 1024 ? 'pl-16' : 'pl-0'}`}>
@@ -114,13 +117,13 @@ const App: React.FC = () => {
                 <i className="fas fa-chevron-right text-[8px] md:text-[10px] hidden sm:inline opacity-50"></i>
                 <span>Pentateuco</span>
                 <i className="fas fa-chevron-right text-[8px] md:text-[10px] opacity-50"></i>
-                <span>{view === 'lesson' ? 'Números - Clase 7' : 'Recurso Especial'}</span>
+                <span>{view === 'lesson' ? 'Números - Clase 7' : 'Geografía Sagrada'}</span>
               </div>
               <h1 className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-2xl leading-[1.1]">
                 {view === 'lesson' ? lesson.title : 'Mapa Interactivo del Recorrido'}
               </h1>
               <p className="text-lg md:text-2xl opacity-90 font-light max-w-2xl drop-shadow-lg italic">
-                {view === 'lesson' ? lesson.subtitle : 'Sigue los pasos de Israel desde la esclavitud hasta la libertad'}
+                {view === 'lesson' ? lesson.subtitle : 'Visualiza la trayectoria de la fe a través del desierto'}
               </p>
             </div>
           </div>
